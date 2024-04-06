@@ -12,11 +12,13 @@ const initialState = {
     lastName: '',
     address: '',
   },
-  employerValues: {
-    employerName: '',
-    employerStartDate: null,
-    employerEndDate: null,
-  },
+  employerValues: [
+    {
+      employerName: '',
+      employerStartDate: new Date(),
+      employerEndDate: new Date(),
+    },
+  ],
   guarantorValues: {
     guarantorName: '',
     guarantorAddress: '',

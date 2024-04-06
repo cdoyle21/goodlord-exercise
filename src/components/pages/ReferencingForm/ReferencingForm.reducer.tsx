@@ -20,8 +20,8 @@ export type PersonalValues = {
 
 export type EmployerValues = {
   employerName: string;
-  employerStartDate: Date | null;
-  employerEndDate: Date | null;
+  employerStartDate: Date;
+  employerEndDate: Date;
 };
 
 export type GuarantorValues = {
@@ -41,7 +41,8 @@ export type Action =
   | { type: 'setStep'; payload: StepName }
   | { type: 'setPersonalValues'; payload: PersonalValues }
   | { type: 'setEmployerValues'; payload: Array<EmployerValues> }
-  | { type: 'setGuarantorValues'; payload: GuarantorValues };
+  | { type: 'setGuarantorValues'; payload: GuarantorValues }
+  | { type: 'clearValues' };
 
 export const initialState: State = {
   step: StepName.PERSONAL,
@@ -53,8 +54,8 @@ export const initialState: State = {
   employerValues: [
     {
       employerName: '',
-      employerStartDate: null,
-      employerEndDate: null,
+      employerStartDate: new Date(),
+      employerEndDate: new Date(),
     },
   ],
   guarantorValues: {
@@ -86,6 +87,8 @@ export const reducer = (state: State, action: Action): State => {
         ...state,
         guarantorValues: action.payload,
       };
+    case 'clearValues':
+      return { ...initialState };
     default:
       return { ...state };
   }

@@ -7,6 +7,9 @@ export const Wrapper = styled.div`
 `;
 
 export const Title = styled.h1`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 20px 0;
 `;
 
@@ -61,4 +64,5 @@ export const Buttons = styled.div`
   display: flex;
   width: 100%;
   padding: 32px 0;
+  column-gap: 20px;
 `;

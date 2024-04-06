@@ -35,6 +35,11 @@ const GuarantorStep: FC<Props> = ({ localDispatch, localState, referenceEndpoint
     relationship: Yup.string().required('Please select an option'),
   });
 
+  const onCancel = () => {
+    localDispatch({ type: 'setStep', payload: StepName.PERSONAL });
+    localDispatch({ type: 'clearValues' });
+  };
+
   const onSubmit = async (values: GuarantorValues) => {
     try {
       localDispatch({ type: 'setGuarantorValues', payload: values });
@@ -111,6 +116,10 @@ const GuarantorStep: FC<Props> = ({ localDispatch, localState, referenceEndpoint
             </InputWrapper>
 
             <Buttons>
+              <Button onClick={() => onCancel()} testId="guarantor-cancel-action">
+                Cancel
+              </Button>
+
               <Button
                 onClick={() => onSubmit(values)}
                 testId="guarantor-submit-action"

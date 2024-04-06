@@ -12,11 +12,13 @@ const initialState = {
     lastName: 'Doe',
     address: '123 Main St',
   },
-  employerValues: {
-    employerName: 'ABC Corporation',
-    employerStartDate: new Date('2022-01-01'),
-    employerEndDate: new Date('2022-12-31'),
-  },
+  employerValues: [
+    {
+      employerName: 'ABC Corporation',
+      employerStartDate: new Date('2022-01-01'),
+      employerEndDate: new Date('2022-12-31'),
+    },
+  ],
   guarantorValues: {
     guarantorName: '',
     guarantorAddress: '',
@@ -29,11 +31,13 @@ const setup = () => {
   const guarantorNameInput = utils.getByTestId('guarantorName-input');
   const guarantorAddressInput = utils.getByTestId('guarantorAddress-input');
   const relationshipSelect = utils.getByTestId('relationship-input');
+  const cancelButton = utils.getByTestId('guarantor-cancel-action');
   const submitButton = utils.getByTestId('guarantor-submit-action');
   return {
     guarantorNameInput,
     guarantorAddressInput,
     relationshipSelect,
+    cancelButton,
     submitButton,
     ...utils,
   };
@@ -46,6 +50,22 @@ describe('GuarantorStep', () => {
     expect(guarantorAddressInput).toBeInTheDocument();
     expect(relationshipSelect).toBeInTheDocument();
     expect(submitButton).toBeInTheDocument();
+  });
+
+  it('calls dispatch with correct action when Cancel button is clicked', async () => {
+    const { cancelButton } = setup();
+
+    fireEvent.click(cancelButton);
+
+    await waitFor(() => {
+      expect(mockDispatch).toHaveBeenCalledWith({
+        type: 'setStep',
+        payload: StepName.PERSONAL,
+      });
+      expect(mockDispatch).toHaveBeenCalledWith({
+        type: 'clearValues',
+      });
+    });
   });
 
   it('calls dispatch with correct action when Submit button is clicked', async () => {

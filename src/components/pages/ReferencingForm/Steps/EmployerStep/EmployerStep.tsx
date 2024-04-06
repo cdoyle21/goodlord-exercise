@@ -43,6 +43,11 @@ const EmployerStep: FC<Props> = ({ localDispatch, localState }) => {
     ),
   });
 
+  const onCancel = () => {
+    localDispatch({ type: 'setStep', payload: StepName.PERSONAL });
+    localDispatch({ type: 'clearValues' });
+  };
+
   const onSubmit = (values: { employers: Array<EmployerValues> }) => {
     localDispatch({ type: 'setStep', payload: StepName.GUARANTOR });
     localDispatch({ type: 'setEmployerValues', payload: values.employers });
@@ -105,6 +110,10 @@ const EmployerStep: FC<Props> = ({ localDispatch, localState }) => {
             </FieldArray>
 
             <Buttons>
+              <Button onClick={() => onCancel()} testId="employer-cancel-action">
+                Cancel
+              </Button>
+
               <Button
                 onClick={() => onSubmit(values)}
                 testId="employer-continue-action"

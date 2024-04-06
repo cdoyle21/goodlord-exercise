@@ -14,8 +14,8 @@ const initialState = {
   employerValues: [
     {
       employerName: '',
-      employerStartDate: null,
-      employerEndDate: null,
+      employerStartDate: new Date(),
+      employerEndDate: new Date(),
     },
   ],
   guarantorValues: {
@@ -30,11 +30,13 @@ const setup = () => {
   const employerNameInput = utils.getByTestId('employerName-input');
   const startDateInput = utils.getByTestId('employmentStartDate-input');
   const endDateInput = utils.getByTestId('employmentEndDate-input');
+  const cancelButton = utils.getByTestId('employer-cancel-action');
   const continueButton = utils.getByTestId('employer-continue-action');
   return {
     employerNameInput,
     startDateInput,
     endDateInput,
+    cancelButton,
     continueButton,
     ...utils,
   };
@@ -42,11 +44,29 @@ const setup = () => {
 
 describe('EmployerStep', () => {
   it('renders with all input fields', () => {
-    const { employerNameInput, startDateInput, endDateInput, continueButton } = setup();
+    const { employerNameInput, startDateInput, endDateInput, cancelButton, continueButton } =
+      setup();
     expect(employerNameInput).toBeInTheDocument();
     expect(startDateInput).toBeInTheDocument();
     expect(endDateInput).toBeInTheDocument();
+    expect(cancelButton).toBeInTheDocument();
     expect(continueButton).toBeInTheDocument();
+  });
+
+  it('calls dispatch with correct action when Cancel button is clicked', async () => {
+    const { cancelButton } = setup();
+
+    fireEvent.click(cancelButton);
+
+    await waitFor(() => {
+      expect(mockDispatch).toHaveBeenCalledWith({
+        type: 'setStep',
+        payload: StepName.PERSONAL,
+      });
+      expect(mockDispatch).toHaveBeenCalledWith({
+        type: 'clearValues',
+      });
+    });
   });
 
   it('calls dispatch with correct action and payload when Continue button is clicked', async () => {
