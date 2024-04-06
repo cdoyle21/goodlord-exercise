@@ -1,5 +1,5 @@
 import React, { FC, useReducer } from 'react';
-import { Container } from './ReferencingForm.styles';
+import { Wrapper, Title, Steps } from './ReferencingForm.styles';
 import { StepName, initialState, reducer } from './ReferencingForm.reducer';
 import PersonalStep from './Steps/PersonalStep';
 import EmployerStep from './Steps/EmployerStep';
@@ -21,7 +21,12 @@ const ReferencingForm: FC = () => {
     }
   };
 
-  return <Container>{returnStep(activeStep)}</Container>;
+  return (
+    <Wrapper>
+      <Title>Goodlord referencing form</Title>
+      <Steps>{returnStep(activeStep)}</Steps>
+    </Wrapper>
+  );
 };
 
 export default ReferencingForm;

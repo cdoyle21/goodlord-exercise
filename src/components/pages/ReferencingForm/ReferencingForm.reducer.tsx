@@ -4,7 +4,7 @@ export enum StepName {
   GUARANTOR = 'Guarantor',
 }
 
-export enum guarantorRelationship {
+export enum GuarantorRelationship {
   PARENT = 'Parent',
   SIBLING = 'Sibling',
   EMPLOYER = 'Employer',
@@ -19,14 +19,14 @@ export interface PersonalValues {
 
 export interface EmployerValues {
   employerName: string;
-  startDate: Date | null;
-  endDate: Date | null;
+  employerStartDate: Date | null;
+  employerEndDate: Date | null;
 }
 
 export interface GuarantorValues {
   guarantorName: string;
   guarantorAddress: string;
-  relationship: guarantorRelationship;
+  relationship: GuarantorRelationship;
 }
 
 export interface State {
@@ -51,13 +51,13 @@ export const initialState: State = {
   },
   employerValues: {
     employerName: '',
-    startDate: null,
-    endDate: null,
+    employerStartDate: null,
+    employerEndDate: null,
   },
   guarantorValues: {
     guarantorName: '',
     guarantorAddress: '',
-    relationship: guarantorRelationship.PARENT,
+    relationship: GuarantorRelationship.PARENT,
   },
 };
 

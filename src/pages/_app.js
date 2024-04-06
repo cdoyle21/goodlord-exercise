@@ -25,7 +25,7 @@ body.using-mouse :focus {
 }
 a {
   text-decoration: none;
-  color: #582f7e;
+  color: #34d9c3;
   font-family: var(--font-arimo, 'Arimo', Helvetica);
   font-weight: 700;
   font-size: 12px;
@@ -36,12 +36,13 @@ h2,
 h3 {
   padding: 0px;
   margin: 0px;
-  color: #582f7e;
+  color: #34d9c3;
   font-family: var(--font-arimo, 'Arimo', Helvetica);
 }
 
 p,
-span {
+span,
+label {
   font-family: var(--font-arimo, 'Arimo', Helvetica);
   font-size: 12px;
   line-height: 24px;
