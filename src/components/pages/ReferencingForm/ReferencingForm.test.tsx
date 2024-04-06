@@ -1,54 +1,20 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import ReferencingForm from './ReferencingForm';
+import { StepName, initialState } from './ReferencingForm.reducer';
 
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
   useReducer: jest.fn(),
 }));
 
-jest.mock('./ReferencingForm.reducer', () => {
-  const initialState = {
-    step: 'PERSONAL',
-    personalValues: {
-      firstName: '',
-      lastName: '',
-      address: '',
-    },
-    employerValues: {
-      employerName: '',
-      employerStartDate: null,
-      employerEndDate: null,
-    },
-    guarantorValues: {
-      guarantorName: '',
-      guarantorAddress: '',
-      relationship: 'PARENT',
-    },
-  };
-  return {
-    initialState,
-    reducer: jest.fn(),
-    StepName: {
-      PERSONAL: 'Personal',
-      EMPLOYER: 'Employer',
-      GUARANTOR: 'Guarantor',
-    },
-    GuarantorRelationship: {
-      PARENT: 'Parent',
-      SIBLING: 'Sibling',
-      EMPLOYER: 'Employer',
-      OTHER: 'Other',
-    },
-  };
-});
-
 describe('ReferencingForm component', () => {
   it('renders with Personal step', () => {
     const mockDispatch = jest.fn();
     (React.useReducer as jest.Mock).mockReturnValue([
       {
-        step: 'Personal',
+        ...initialState,
+        step: StepName.PERSONAL,
       },
       mockDispatch,
     ]);
@@ -63,7 +29,8 @@ describe('ReferencingForm component', () => {
     const mockDispatch = jest.fn();
     (React.useReducer as jest.Mock).mockReturnValue([
       {
-        step: 'Employer',
+        ...initialState,
+        step: StepName.EMPLOYER,
       },
       mockDispatch,
     ]);
@@ -78,7 +45,8 @@ describe('ReferencingForm component', () => {
     const mockDispatch = jest.fn();
     (React.useReducer as jest.Mock).mockReturnValue([
       {
-        step: 'Guarantor',
+        ...initialState,
+        step: StepName.GUARANTOR,
       },
       mockDispatch,
     ]);
@@ -87,5 +55,21 @@ describe('ReferencingForm component', () => {
 
     expect(getByText('Goodlord referencing form')).toBeInTheDocument();
     expect(getByText('Guarantor')).toBeInTheDocument();
+  });
+
+  it('renders with Confirmation step', () => {
+    const mockDispatch = jest.fn();
+    (React.useReducer as jest.Mock).mockReturnValue([
+      {
+        ...initialState,
+        step: StepName.CONFIRMATION,
+      },
+      mockDispatch,
+    ]);
+
+    const { getByText } = render(<ReferencingForm />);
+
+    expect(getByText('Goodlord referencing form')).toBeInTheDocument();
+    expect(getByText('Confirmation')).toBeInTheDocument();
   });
 });

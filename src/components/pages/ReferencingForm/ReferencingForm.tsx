@@ -4,8 +4,13 @@ import { StepName, initialState, reducer } from './ReferencingForm.reducer';
 import PersonalStep from './Steps/PersonalStep';
 import EmployerStep from './Steps/EmployerStep';
 import GuarantorStep from './Steps/GuarantorStep';
+import ConfirmationStep from './Steps/ConfirmationStep';
 
-const ReferencingForm: FC = () => {
+interface Props {
+  referenceEndpoint?: string;
+}
+
+const ReferencingForm: FC<Props> = ({ referenceEndpoint }) => {
   const [localState, localDispatch] = useReducer(reducer, initialState);
 
   const activeStep: StepName = localState.step;
@@ -15,7 +20,15 @@ const ReferencingForm: FC = () => {
       case StepName.EMPLOYER:
         return <EmployerStep localDispatch={localDispatch} localState={localState} />;
       case StepName.GUARANTOR:
-        return <GuarantorStep localDispatch={localDispatch} localState={localState} />;
+        return (
+          <GuarantorStep
+            localDispatch={localDispatch}
+            localState={localState}
+            referenceEndpoint={referenceEndpoint}
+          />
+        );
+      case StepName.CONFIRMATION:
+        return <ConfirmationStep />;
       default:
         return <PersonalStep localDispatch={localDispatch} localState={localState} />;
     }

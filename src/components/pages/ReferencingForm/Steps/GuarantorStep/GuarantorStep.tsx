@@ -14,15 +14,18 @@ import {
   GuarantorValues,
   State,
   GuarantorRelationship,
+  StepName,
 } from '../../ReferencingForm.reducer';
 import { Button } from '../../../../atoms/Button/Button';
+import { createReference } from '../../../../services/references';
 
 type Props = {
   localDispatch: Dispatch<Action>;
   localState: State;
+  referenceEndpoint?: string;
 };
 
-const GuarantorStep: FC<Props> = ({ localDispatch, localState }) => {
+const GuarantorStep: FC<Props> = ({ localDispatch, localState, referenceEndpoint }) => {
   const validationSchema = Yup.object().shape({
     guarantorName: Yup.string()
       .required('Guarantor name can not be empty')
@@ -32,8 +35,36 @@ const GuarantorStep: FC<Props> = ({ localDispatch, localState }) => {
     relationship: Yup.string().required('Please select an option'),
   });
 
-  const onSubmit = (values: GuarantorValues) => {
-    localDispatch({ type: 'setGuarantorValues', payload: values });
+  const onSubmit = async (values: GuarantorValues) => {
+    try {
+      localDispatch({ type: 'setGuarantorValues', payload: values });
+      localDispatch({ type: 'setStep', payload: StepName.CONFIRMATION });
+
+      const { personalValues, employerValues } = localState;
+
+      const newReference = await createReference(
+        {
+          personalValues: {
+            firstName: personalValues.firstName,
+            lastName: personalValues.lastName,
+            address: personalValues.address,
+          },
+          employerValues: employerValues.map((employer) => ({
+            employerName: employer.employerName,
+            employerStartDate: employer.employerStartDate,
+            employerEndDate: employer.employerEndDate,
+          })),
+          guarantorValues: values,
+        },
+        referenceEndpoint,
+      );
+
+      if (!newReference) {
+        throw new Error('Failed to create reference');
+      }
+    } catch (error) {
+      console.error('Error creating reference:', error);
+    }
   };
 
   return (

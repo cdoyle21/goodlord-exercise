@@ -2,6 +2,7 @@ export enum StepName {
   PERSONAL = 'Personal',
   EMPLOYER = 'Employer',
   GUARANTOR = 'Guarantor',
+  CONFIRMATION = 'Confirmation',
 }
 
 export enum GuarantorRelationship {
@@ -11,35 +12,35 @@ export enum GuarantorRelationship {
   OTHER = 'Other',
 }
 
-export interface PersonalValues {
+export type PersonalValues = {
   firstName: string;
   lastName: string;
   address: string;
-}
+};
 
-export interface EmployerValues {
+export type EmployerValues = {
   employerName: string;
   employerStartDate: Date | null;
   employerEndDate: Date | null;
-}
+};
 
-export interface GuarantorValues {
+export type GuarantorValues = {
   guarantorName: string;
   guarantorAddress: string;
   relationship: GuarantorRelationship;
-}
+};
 
-export interface State {
+export type State = {
   step: StepName;
   personalValues: PersonalValues;
-  employerValues: EmployerValues;
+  employerValues: Array<EmployerValues>;
   guarantorValues: GuarantorValues;
-}
+};
 
 export type Action =
   | { type: 'setStep'; payload: StepName }
   | { type: 'setPersonalValues'; payload: PersonalValues }
-  | { type: 'setEmployerValues'; payload: EmployerValues }
+  | { type: 'setEmployerValues'; payload: Array<EmployerValues> }
   | { type: 'setGuarantorValues'; payload: GuarantorValues };
 
 export const initialState: State = {
@@ -49,11 +50,13 @@ export const initialState: State = {
     lastName: '',
     address: '',
   },
-  employerValues: {
-    employerName: '',
-    employerStartDate: null,
-    employerEndDate: null,
-  },
+  employerValues: [
+    {
+      employerName: '',
+      employerStartDate: null,
+      employerEndDate: null,
+    },
+  ],
   guarantorValues: {
     guarantorName: '',
     guarantorAddress: '',

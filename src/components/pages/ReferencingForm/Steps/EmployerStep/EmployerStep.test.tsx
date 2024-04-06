@@ -4,7 +4,6 @@ import EmployerStep from './EmployerStep';
 import { GuarantorRelationship, StepName } from '../../ReferencingForm.reducer';
 
 const mockDispatch = jest.fn();
-
 const initialState = {
   step: StepName.EMPLOYER,
   personalValues: {
@@ -12,11 +11,13 @@ const initialState = {
     lastName: 'Doe',
     address: '123 Main St',
   },
-  employerValues: {
-    employerName: '',
-    employerStartDate: null,
-    employerEndDate: null,
-  },
+  employerValues: [
+    {
+      employerName: '',
+      employerStartDate: null,
+      employerEndDate: null,
+    },
+  ],
   guarantorValues: {
     guarantorName: '',
     guarantorAddress: '',
@@ -48,7 +49,7 @@ describe('EmployerStep', () => {
     expect(continueButton).toBeInTheDocument();
   });
 
-  it('calls dispatch with correct action when Continue button is clicked', async () => {
+  it('calls dispatch with correct action and payload when Continue button is clicked', async () => {
     const { employerNameInput, startDateInput, endDateInput, continueButton } = setup();
 
     fireEvent.change(employerNameInput, { target: { value: 'ABC Corporation' } });
@@ -64,11 +65,13 @@ describe('EmployerStep', () => {
       });
       expect(mockDispatch).toHaveBeenCalledWith({
         type: 'setEmployerValues',
-        payload: {
-          employerName: 'ABC Corporation',
-          employerStartDate: '2022-01-01',
-          employerEndDate: '2022-12-31',
-        },
+        payload: [
+          {
+            employerName: 'ABC Corporation',
+            employerStartDate: '2022-01-01',
+            employerEndDate: '2022-12-31',
+          },
+        ],
       });
     });
   });

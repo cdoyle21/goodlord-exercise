@@ -1,5 +1,5 @@
 import React, { Dispatch, FC } from 'react';
-import { Form, Formik, Field, ErrorMessage } from 'formik';
+import { Form, Formik, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import {
   Container,
@@ -18,67 +18,91 @@ type Props = {
 };
 
 const EmployerStep: FC<Props> = ({ localDispatch, localState }) => {
+  const initialValues = {
+    employers: localState.employerValues.map((employer: EmployerValues) => ({
+      employerName: employer.employerName,
+      employerStartDate: employer.employerStartDate,
+      employerEndDate: employer.employerEndDate,
+    })),
+  };
+
   const validationSchema = Yup.object().shape({
-    employerName: Yup.string()
-      .required('Employer name can not be empty')
-      .max(50, 'You have exceeded the character limit for an employer name')
-      .trim(),
-    employerStartDate: Yup.date()
-      .required('Start date can not be empty')
-      .max(new Date(), 'Start date must be in the past'),
-    employerEndDate: Yup.date()
-      .required('End date can not be empty')
-      .min(Yup.ref('employerStartDate'), 'End date can not be before start date'),
+    employers: Yup.array().of(
+      Yup.object().shape({
+        employerName: Yup.string()
+          .required('Employer name can not be empty')
+          .max(50, 'You have exceeded the character limit for an employer name')
+          .trim(),
+        employerStartDate: Yup.date()
+          .required('Start date can not be empty')
+          .max(new Date(), 'Start date must be in the past'),
+        employerEndDate: Yup.date()
+          .min(Yup.ref('employerStartDate'), 'End date can not be before start date')
+          .nullable(),
+      }),
+    ),
   });
 
-  const onSubmit = (values: EmployerValues) => {
+  const onSubmit = (values: { employers: Array<EmployerValues> }) => {
     localDispatch({ type: 'setStep', payload: StepName.GUARANTOR });
-    localDispatch({ type: 'setEmployerValues', payload: values });
+    localDispatch({ type: 'setEmployerValues', payload: values.employers });
   };
 
   return (
     <Container>
       <Subtitle>Employer</Subtitle>
-      <Formik
-        initialValues={localState.employerValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
-      >
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
         {({ handleSubmit, values, isSubmitting, isValid, dirty }) => (
           <Form onSubmit={handleSubmit}>
-            <InputLabel htmlFor="employer name">Employer name</InputLabel>
-            <InputWrapper>
-              <Field type="text" name="employerName" data-testid="employerName-input" />
-              <ErrorWrapper>
-                <ErrorMessage name="employerName" />
-              </ErrorWrapper>
-            </InputWrapper>
+            <FieldArray name="employers">
+              {() => (
+                <>
+                  {values.employers.map((employer, index) => (
+                    <div key={index}>
+                      <InputLabel htmlFor={`employerName-${index}`}>Employer name</InputLabel>
+                      <InputWrapper>
+                        <Field
+                          type="text"
+                          name={`employers[${index}].employerName`}
+                          data-testid="employerName-input"
+                        />
+                        <ErrorWrapper>
+                          <ErrorMessage name={`employers[${index}].employerName`} />
+                        </ErrorWrapper>
+                      </InputWrapper>
 
-            <InputLabel htmlFor="employment start date">Employment start date</InputLabel>
-            <InputWrapper>
-              <Field
-                type="date"
-                name="employerStartDate"
-                placeholder="YYYY-MM-DD"
-                data-testid="employmentStartDate-input"
-              />
-              <ErrorWrapper>
-                <ErrorMessage name="employerStartDate" />
-              </ErrorWrapper>
-            </InputWrapper>
+                      <InputLabel htmlFor={`employerStartDate-${index}`}>
+                        Employment start date
+                      </InputLabel>
+                      <InputWrapper>
+                        <Field
+                          type="date"
+                          name={`employers[${index}].employerStartDate`}
+                          data-testid="employmentStartDate-input"
+                        />
+                        <ErrorWrapper>
+                          <ErrorMessage name={`employers[${index}].employerStartDate`} />
+                        </ErrorWrapper>
+                      </InputWrapper>
 
-            <InputLabel htmlFor="employment end date">Employment end date</InputLabel>
-            <InputWrapper>
-              <Field
-                type="date"
-                name="employerEndDate"
-                placeholder="YYYY-MM-DD"
-                data-testid="employmentEndDate-input"
-              />
-              <ErrorWrapper>
-                <ErrorMessage name="employerEndDate" />
-              </ErrorWrapper>
-            </InputWrapper>
+                      <InputLabel htmlFor={`employerEndDate-${index}`}>
+                        Employment end date
+                      </InputLabel>
+                      <InputWrapper>
+                        <Field
+                          type="date"
+                          name={`employers[${index}].employerEndDate`}
+                          data-testid="employmentEndDate-input"
+                        />
+                        <ErrorWrapper>
+                          <ErrorMessage name={`employers[${index}].employerEndDate`} />
+                        </ErrorWrapper>
+                      </InputWrapper>
+                    </div>
+                  ))}
+                </>
+              )}
+            </FieldArray>
 
             <Buttons>
               <Button

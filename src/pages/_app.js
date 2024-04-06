@@ -28,7 +28,7 @@ a {
   color: #34d9c3;
   font-family: var(--font-arimo, 'Arimo', Helvetica);
   font-weight: 700;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 h1,
@@ -44,7 +44,7 @@ p,
 span,
 label {
   font-family: var(--font-arimo, 'Arimo', Helvetica);
-  font-size: 12px;
+  font-size: 16px;
   line-height: 24px;
 }
 
